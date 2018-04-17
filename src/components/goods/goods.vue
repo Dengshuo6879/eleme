@@ -30,7 +30,7 @@
                   <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartControl-wrapper">
-                  <cartControl :food="food"></cartControl>
+                  <cartControl :food="food" @add="addFood"></cartControl>
                 </div>
               </div>
             </li>
@@ -38,8 +38,8 @@
         </li>
       </ul>
     </div>
-    
-    <shopCart :delivery-price='seller.deliveryPrice' :min-price="seller.minPrice"></shopCart>
+
+    <shopCart ref="shopcart" :select-foods="selectFoods" :delivery-price='seller.deliveryPrice' :min-price="seller.minPrice"></shopCart>
 
   </div>
 </template>
@@ -47,7 +47,7 @@
 <script type="text/ecmascript-6">
 import BScroll from "better-scroll";
 import shopCart from "components/shopCart/shopCart";
-import cartControl from 'components/cartControl/cartControl';
+import cartControl from "components/cartControl/cartControl";
 
 const ERR_OK = 0;
 const debug = process.env.NODE_ENV !== "production";
@@ -63,7 +63,7 @@ export default {
       goods: [],
       listHeight: [],
       scrollY: 0,
-      selectedFood: {},
+      selectedFood: {}
     };
   },
   computed: {
@@ -76,6 +76,17 @@ export default {
         }
       }
       return 0;
+    },
+    selectFoods() {
+      let foods = [];
+      this.goods.map(good => {
+        good.foods.map(food => {
+          if (food.count) {
+            foods.push(food);
+          }
+        });
+      });
+      return foods;
     }
   },
   created() {
@@ -102,7 +113,9 @@ export default {
       let el = foodList[index];
       this.foodsScroll.scrollToElement(el, 300);
     },
-
+    addFood(target) {
+      this._drop(target);
+    },
     _initScroll() {
       this.meunScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
@@ -129,11 +142,23 @@ export default {
         height += item.clientHeight;
         this.listHeight.push(height);
       }
+    },
+    _drop(target) {
+      //体验优化，异步执行下落动画
+      this.$nextTick(() => {
+        //访问一个子组件
+        this.$refs.shopcart.drop(target);
+      });
     }
   },
   components: {
     shopCart,
-    cartControl,
+    cartControl
+  },
+  events: {
+    "cart.add"(target) {
+      this._drop(target);
+    }
   }
 };
 </script>
@@ -152,7 +177,7 @@ export default {
   .menu-wrapper {
     flex: 0 0 80px;
     width: 80px;
-    background: #f8f8f8;
+    background: #f5f5f5;
 
     .menu-item {
       display: table;
@@ -223,7 +248,7 @@ export default {
       border-left: 2px solid #d9dde1;
       font-size: 12px;
       color: rgb(147, 153, 159);
-      background: #f8f8f8;
+      background: #f5f5f5;
     }
 
     .food-item {
