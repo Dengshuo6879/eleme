@@ -53,3 +53,33 @@ bg-image($url)
 * 把一个网站地址生成二维码  
 草料二维码生成器：https://cli.im/ 
 ![](img/草料二维码.png)
+
+* 中间为字，两边为线  
+```HTML
+<div class="title">
+  <div class="line"></div>
+  <div class="text">优惠信息</div>
+  <div class="line"></div>
+</div>
+```
+```stylus
+.title {
+  width: 80%;
+  display: flex;
+  margin: 30px auto 24px auto;
+
+  .line {
+    flex: 1;
+    position: relative;
+    top: -6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .text {
+    padding: 0 12px;
+    font-size: 14px;
+  }
+}
+```
+
+# Vue 过渡动画--transition标签
