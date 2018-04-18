@@ -14,7 +14,7 @@
           </div>
           <div class="desc">另需配送费 ￥{{deliveryPrice}}</div>
         </div>
-        <div class="content-right">
+        <div class="content-right" @click.stop.prevent="pay">
           <div class="pay" :class="payClass">
             {{payDesc}}
           </div>
@@ -58,7 +58,7 @@
     </div>
 
     <transition name="fade">
-      <div class="list-mask" @click="" v-show="listShow"></div>
+      <div class="list-mask" @click="hideList" v-show="listShow"></div>
     </transition>
   </div>
 </template>
@@ -155,7 +155,7 @@ export default {
         });
       }
       return show;
-    }
+    },
   },
   methods: {
     drop(el) {
@@ -179,6 +179,15 @@ export default {
       this.selectFoods.map(food => {
         food.count = 0;
       });
+    },
+    hideList(){
+      this.fold = true;
+    },
+    pay(){
+      if(this.totalPrice < this. minPrice){
+        return;
+      }
+      window.alert(`支付${this.totalPrice}元`);
     },
 
     beforeEnter(el) {

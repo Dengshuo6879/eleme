@@ -29,7 +29,6 @@ export default {
       } else {
         this.food.count++;
       }
-
       this.$emit("add", event.target);
     },
     decreaseCart(event) {
