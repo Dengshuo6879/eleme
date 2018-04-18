@@ -155,11 +155,6 @@ export default {
     shopCart,
     cartControl
   },
-  events: {
-    "cart.add"(target) {
-      this._drop(target);
-    }
-  }
 };
 </script>
 
