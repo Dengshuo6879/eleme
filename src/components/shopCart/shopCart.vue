@@ -194,8 +194,8 @@ export default {
       let count = this.balls.length;
       while (count--) {
         let ball = this.balls[count];
-        if (ball.show) {
-          let rect = ball.el.getBoundingClientRect();
+        if (ball.show) {   //判断该小球是不是要运动的小球
+          let rect = ball.el.getBoundingClientRect();  //获取这个元素相对于视口的位置
           let x = rect.left - 32;
           let y = -(window.innerHeight - rect.top - 22);
           el.style.display = "";
@@ -209,7 +209,7 @@ export default {
     },
     enter(el, done) {
       /* eslint-disable no-unused-vars */
-      let rf = el.offsetHeight;
+      let rf = el.offsetHeight;   //触发浏览器重绘
       this.$nextTick(() => {
         el.style.webkitTransform = "translate3d(0,0,0)";
         el.style.transform = "translate3d(0,0,0)";

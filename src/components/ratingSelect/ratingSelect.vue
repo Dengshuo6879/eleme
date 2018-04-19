@@ -1,19 +1,19 @@
 <template>
   <div class="ratingSelect">
     <div class="rating-type border-1px">
-      <span class="block positive" :class="{'active': selectType===2}">{{desc.all}}
-        <span class="count">47</span>
+      <span @click="select(2, $event)" class="block positive" :class="{'active': selectType===2}">{{desc.all}}
+        <span class="count">{{ratings.length}}</span>
       </span>
-      <span class="block positive" :class="{'active': selectType===0}">{{desc.positive}}
-        <span class="count">57</span>
+      <span @click="select(0, $event)" class="block positive" :class="{'active': selectType===0}">{{desc.positive}}
+        <span class="count">{{positives.length}}</span>
       </span>
-      <span class="block negative" :class="{'active': selectType===1}">{{desc.negative}}
-        <span class="count">50</span>
+      <span @click="select(1, $event)" class="block negative" :class="{'active': selectType===1}">{{desc.negative}}
+        <span class="count">{{negatives.length}}</span>
       </span>
     </div>
-    <div class="switch">
+    <div class="switch" :class="{'on': onlyContent}" @click="toggleContent">
       <span class="icon-check_circle"></span>
-      <span>只看没有内容的评价</span>
+      <span class="text">只看没有内容的评价</span>
     </div>
   </div>
 </template>
@@ -47,6 +47,33 @@ export default {
         };
       }
     }
+  },
+  computed: {
+    positives() {
+      return this.ratings.filter(rating => {
+        return rating.rateType === POSITIVE;
+      });
+    },
+    negatives() {
+      return this.ratings.filter(rating => {
+        return rating.rateType === NEGATIVE;
+      });
+    }
+  },
+
+  methods: {
+    select(type, event) {
+      if (!event._constructed) {
+        return;
+      }
+      this.$emit("select", type);
+    },
+    toggleContent(event) {
+      if (!event._constructed) {
+        return;
+      }
+      this.$emit("toggle");
+    }
   }
 };
 </script>
@@ -67,28 +94,58 @@ export default {
       border-radius: 1px;
       font-size: 12px;
       color: rgb(77, 85, 93);
-      &.active{
+
+      &.active {
         color: #fff;
       }
 
-      .count{
+      .count {
         font-size: 8px;
         margin-left: 2px;
       }
 
       &.positive {
         background: rgba(0, 160, 220, 0.2);
-        &.active{
+
+        &.active {
           background: rgb(0, 160, 220);
         }
       }
 
       &.negative {
         background: rgba(77, 85, 93, 0.2);
-        &.active{
+
+        &.active {
           background: rgb(77, 85, 93);
         }
       }
+    }
+  }
+
+  .switch {
+    padding: 12px 18px;
+    line-height: 24px;
+    border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+    color: rgb(147, 153, 159);
+    font-size: 0;
+
+    &.on {
+      .icon-check_circle {
+        color: #00c850;
+      }
+    }
+
+    .icon-check_circle {
+      margin-right: 4px;
+      font-size: 24px;
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .text {
+      font-size: 12px;
+      display: inline-block;
+      vertical-align: top;
     }
   }
 }
