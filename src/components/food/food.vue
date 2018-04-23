@@ -18,8 +18,8 @@
             <span class="now">￥{{food.price}}</span>
             <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
           </div>
-          <div class="cartcontrol-wrapper">
-            <cartcontrol @add="addFood" :food="food"></cartcontrol>
+          <div class="cartControl-wrapper">
+            <cartControl @add="addFood" :food="food"></cartControl>
           </div>
           <transition name="fade">
             <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count===0">
@@ -35,7 +35,7 @@
         <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect @select="selectRating" @toggle="toggleContent" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingSelect @select="selectRating" @toggle="toggleContent" :selectType="selectType" :onlyContent="onlyContent" :desc="desc" :ratings="food.ratings"></ratingSelect>
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
               <li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings" class="rating-item border-1px">
@@ -60,8 +60,8 @@
 <script type="text/ecmascript-6">
 import BScroll from "better-scroll";
 import Vue from "vue";
-import cartcontrol from "components/cartcontrol/cartcontrol";
-import ratingselect from "components/ratingselect/ratingselect";
+import cartControl from "components/cartControl/cartControl";
+import ratingSelect from "components/ratingSelect/ratingSelect";
 import split from "components/split/split";
 import { formatDate } from 'common/js/date.js';
 
@@ -143,8 +143,8 @@ export default {
     }
   },
   components: {
-    cartcontrol,
-    ratingselect,
+    cartControl,
+    ratingSelect,
     split
   }
 };
@@ -244,7 +244,7 @@ export default {
       }
     }
 
-    .cartcontrol-wrapper {
+    .cartControl-wrapper {
       position: absolute;
       right: 12px;
       bottom: 12px;
