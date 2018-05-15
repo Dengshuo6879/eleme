@@ -26,7 +26,7 @@ export default {
       }
       if (!this.food.count) {
         Vue.set(this.food, "count", 1);
-      } else {
+      } else  {
         this.food.count++;
       }
       this.$emit("add", event.target);
