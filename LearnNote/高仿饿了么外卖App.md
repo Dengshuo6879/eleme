@@ -1,4 +1,4 @@
-# 1.Vue学习内容  
+# 1. Vue学习内容  
 
 ## 1.1 环境搭建
 兼容性：Vue.js不支持IE8及以下版本，因为Vue.js使用了IE8不能模拟的ECMAScript5特性，它支持所有兼容ECMAScript5的浏览器；  
@@ -791,9 +791,9 @@ var child = parent.$refs.profile;
 当ref和v-for一起使用时，获取到的引用会是一个数组，包含和循环数据源对应的子组件。注意$refs只在组件渲染完成后才填充，而且它是非响应式的，它仅仅是一个直接操作子组件的应急方案，应避免在模板或计算属性中使用$refs。
 
 
-# 项目内容
+# 2. 项目内容
 
-## Vue-cli
+## 2.1 Vue-cli
 Vue-cli是Vue的脚手架工具，安装方法，
 ```cmd
 npm install -g vue-cli
@@ -807,17 +807,17 @@ vue init <template-name> <project-name>
 vue init  webpack my-project
 ```
 
-## Webpack配置
+## 2.2 Webpack配置
 从package.json开始，当输入`npm run dev`时执行`node build/dev-server.js`，
 
-## 制作图标字体 -- https://icomoon.io
+## 2.3 制作图标字体 -- https://icomoon.io
 
 
-## linkActiveClass 
+## 2.4inkActiveClass 
 * 默认值是 `v-link-active`  
 配置当 v-link 元素匹配的路径时需要添加到元素上的class。只要当前路径以 v-link 的URL开头，这个class就会被添加到这个元素上。活跃匹配的规则和添加的class也可以通过 v-link 的内联选项单独指定。
 
-# 移动端1px边框问题  
+### 移动端1px边框问题  
 在web端1px就是1px，但是在移动端有可能会很粗。  
 ```stylus
 // minxin.stylus
@@ -856,14 +856,126 @@ bg-image($url)
     background-image: url($url + "@3x.png")
 ```
 
-* Css Sticky footers布局  
+## 2.5flex布局
+Flex布局是Flexible Box的缩写，意为“弹性布局”，用来为盒状模型提供最大的灵活性。任何一个容器都可以指定为Flex布局：
+```css
+.box{
+  display: flex;
+}
+```
+行内元素也可以使用Flex布局：
+```css
+.box{
+  display: inline-flex;
+}
+```
+Webkit内核的浏览器，必须加上-webkit前缀：
+```css
+.box{
+  display: -webkit-flex;       /* Safari */
+  display: flex;
+}
+```
+注意：设为flex布局后，子元素的float、clear和vertical-align属性将失效。  
+
+采用Flex布局的元素，称为flex容器（Flex container），简称“容器”，它的所有子元素自动成为容器成员，成为Flex项目（flex item），简称“项目”。容器默认存在两根轴，水平的主轴（main axis）和垂直的交叉轴（cross axis）。主轴的开始位置（与边框的交叉点）叫做main start，结束位置叫做main end；交叉轴的开始位置叫做cross start，结束位置叫做cross end。  
+项目默认沿主轴排列，单个项目占据的主轴空间叫做main size，占据的交叉空间叫做cross size。
+
+### 2.5.1 flex-direction属性
+flex-direction属性决定主轴的方向（即项目的排列方向）。
+```css
+.box{
+  flex-direction: row | row-reverse | column | column-reverse
+}
+```  
+![](img/2.5.1.png)
+它可能有4个值：
+* row（默认值）：主轴为水平方向，起点在左端；
+* row-reverse：主轴为水平方向，起点在右端；
+* column：主轴为垂直方向，起点在上沿；
+* column-reverse：主轴为垂直方向，起点在下沿；
+
+### 2.5.2 flex-wrap属性
+默认情况下，项目都排在一条线（又称“轴线”）上，flex-wrap属性定义，如果一条轴线排不下，如何换行；
+```css
+.box{
+  flex-wrap: nowrap | wrap | wrap-reverse;
+}
+```
+可取三个值：
+1. nowrap（默认）：不换行
+![](img/2.5.2.1.png)
+2. wrap：换行，第一行在上方
+![](img/2.5.2.2.png)
+3. wrap-reverse：换行，第一行在下方
+![](img/2.5.2.3.png);
+
+### 2.5.3 flex-flow
+flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认为row nowrap。
+```css
+.box{
+  flex-flow: <flex-direction> || <flex-wrap>;
+}
+```
+ 
+ ### 2.5.4 justify-content属性
+ justify-content属性定义了项目在主轴上的对齐方式。
+ ```css
+.box{
+  justify-content: flex-start | flex-end | center | space-between | space-around;
+}
+ ```
+ ![](img/2.5.4.png);
+ 可取5个值，具体对齐方式与轴的方向有关，下面假设主轴为从左到右：
+ * flex-start（默认值）：左对齐
+ * flex-end:右对齐
+ * center： 居中
+ * space-between：两端对齐，项目之间的间隔都相等
+ * space-around：每个项目两侧的间隔相等。所以项目之间的间隔比项目与边框的间隔大一倍。
+
+ ### 2.5.5 align-items属性
+ align-items属性定义项目在交叉轴上如何对齐：
+ ```css
+.box{
+  align-items: flex-start | flex-end | center | baseline | stretch;
+}
+ ```
+ ![](img/2.5.5.png);
+可取5个值。具体的对齐方式与交叉轴的方向有关，下面假设交叉轴从上到下。
+* flex-start：交叉轴的起点对齐。
+* flex-end：交叉轴的终点对齐。
+* center：交叉轴的中点对齐。
+* baseline: 项目的第一行文字的基线对齐。
+* stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度。
+
+### 2.5.6 align-content属性
+align-content属性定义了多根轴线的对齐方式，如果项目只有一根轴线，该属性不起作用：
+```css
+.box{
+  align-content: flex-start | flex-end | center | spance-between | spance-around | stretch;
+}
+```
+![](img/2.5.6.png)
+
+该属性可能取6个值：
+* flex-start：与交叉轴的起点对齐。
+* flex-end：与交叉轴的终点对齐。
+* center：与交叉轴的中点对齐。
+* space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。
+* space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。
+* stretch（默认值）：轴线占满整个交叉轴。
+
+
+
+
+## 2.6 Css Sticky footers布局  
 在网页设计中，Sticky footers设计是最古老和最常见的效果之一，大多数人都曾经经历过，它可概括如下：如果页面内容不够长的时候，页脚块粘贴在视窗底部，如果内容足够长时，页脚块会被内容向下推送。
 
-* 把一个网站地址生成二维码  
+### 把一个网站地址生成二维码  
 草料二维码生成器：https://cli.im/ 
 ![](img/caoliao.png)
 
-* 中间为字，两边为线  
+### 中间为字，两边为线  
 ```html
 <div class="title">
   <div class="line"></div>
@@ -891,4 +1003,54 @@ bg-image($url)
 }
 ```
 
-## Vue 过渡动画--transition标签
+## 2.7 Vue 过渡动画--transition标签
+Vue在插入、更新或者移除DOM时，提供多种不同方式应用过度效果，包括以下方式：  
+* 在css过渡和动画中自动应用class；
+* 配合使用第三方css动画库；  
+* 在过渡钩子函数中使用JavaScript直接操作DOM；  
+
+### 单元素/组件的过渡
+Vue提供了transition的封装组件，在下列情形中，可以给任何组件和元素添加进入/离开的过渡：
+* 条件渲染（使用v-if）；
+* 条件展示（使用v-show）；
+* 动态组件
+* 组件根节点
+例子：
+```html
+<div id="demo">
+  <button v-on:click="show = !show">Toggle</button>
+  <transition name="fade">
+    <p v-if="show">hello</p>
+  </transition>
+</div>
+```
+```javascript
+new Vue({
+  el: '#demo',
+  data: {
+    show: true
+  }
+})
+```
+```Css
+.fade-enter-active, .fade-leave-active {
+  transition: opactity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opactity: 0;
+}
+```
+当插入或删除在transition组件中的元素是，Vue将会做以下处理：
+1. 自动嗅探目标元素是否应用了CSS过渡或动画，这些钩子函数将在恰当时机添加/删除css类名；
+2. 如果过渡组件提供了JavaScript钩子函数，这些钩子函数将在恰当的时机被调用；
+3. 如果没有找到javascript钩子并且也没用检测到css过渡/动画，DOM操作（插入/删除）在下一帧中立即执行。（注意：此指浏览器逐帧动画机制，和vue的nextTick概念不同）。
+
+### 过渡的类名
+在进入/离开的过渡中，会有6个class切换：  
+1. v-enter: 定义进入过渡的开始状态，在元素被插入之前生效，在元素被插入之后的下一帧移除；
+2. v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数；
+3. v-enter-to: 2.1.8版及以上 定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除；
+4. v-leave: 定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除；
+5. v-leave-active：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数；
+6. v-leave-to: 2.1.8版及以上 定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 v-leave 被删除)，在过渡/动画完成之后移除。  
+![](img/vue-transition.png)
