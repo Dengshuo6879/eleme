@@ -808,12 +808,31 @@ vue init  webpack my-project
 ```
 
 ## 2.2 Webpack配置
-从package.json开始，当输入`npm run dev`时执行`node build/dev-server.js`，
+从package.json开始，当输入`npm run dev`时执行`node build/dev-server.js`；  
+路径配置：
+```JavaScript
+var path = require('path');
+
+function resolve(dir){
+  return path.join(_dirname, '...', dir)
+}
+
+module.exports = {
+  extensions: ['.js','.vue','.json'],
+  alias: {
+    '@': resolve('src');
+    'common': resolve('src/common'),
+    'components': resolve('src/components'),
+    'api': resolve('src/api'),
+    'base': resolve('src/base'),
+  }
+}
+```
 
 ## 2.3 制作图标字体 -- https://icomoon.io
 
 
-## 2.4inkActiveClass 
+## 2.4 linkActiveClass 
 * 默认值是 `v-link-active`  
 配置当 v-link 元素匹配的路径时需要添加到元素上的class。只要当前路径以 v-link 的URL开头，这个class就会被添加到这个元素上。活跃匹配的规则和添加的class也可以通过 v-link 的内联选项单独指定。
 
@@ -856,7 +875,7 @@ bg-image($url)
     background-image: url($url + "@3x.png")
 ```
 
-## 2.5flex布局
+## 2.5 flex布局
 Flex布局是Flexible Box的缩写，意为“弹性布局”，用来为盒状模型提供最大的灵活性。任何一个容器都可以指定为Flex布局：
 ```css
 .box{
@@ -966,8 +985,6 @@ align-content属性定义了多根轴线的对齐方式，如果项目只有一�
 * stretch（默认值）：轴线占满整个交叉轴。
 
 
-
-
 ## 2.6 Css Sticky footers布局  
 在网页设计中，Sticky footers设计是最古老和最常见的效果之一，大多数人都曾经经历过，它可概括如下：如果页面内容不够长的时候，页脚块粘贴在视窗底部，如果内容足够长时，页脚块会被内容向下推送。
 
@@ -1054,3 +1071,96 @@ new Vue({
 5. v-leave-active：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数；
 6. v-leave-to: 2.1.8版及以上 定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 v-leave 被删除)，在过渡/动画完成之后移除。  
 ![](img/vue-transition.png)
+
+## 2.8 插件使用 
+
+* babel-runtime---对ES6语法做转义；
+* fastclick---移动端点击300ms延迟；
+```JavaScript
+import fastclick from 'fastclick';
+
+fastclick.attach(document.body);
+```
+* babel-polyfill---（补丁）对ES6的API（如Promise）做转义；
+
+* jsonp ---跨域请求时使用  
+```JavaScript
+import originJSONP from 'jsonp';
+
+export default function jsonp(url, data, option){
+  url += (url.indeOf('?')<0 ? "?" : "&") + param(data);
+  return new Promise((resolve, reject)=>{
+    originJSONP(url,option,(err, data)=>{
+      if(!err){
+        resolve(data);
+      }else{
+        reject(err);
+      }
+    })
+  })
+}
+//把data拼到url上
+function param(data){
+  let url = '';
+  for(var k in data){
+    let value = data[k] !== undefined ? data[k] : '';
+    url += `&${k} = ${encodeURIComponent(value)}`;
+  }
+  return url ? url.substring(1) : '';
+}
+```
+* butter-scroll---移动端做轮播时用到
+* vue-lazyload---图片懒加载
+```JavaScript
+//main.js
+import VueLazyLoad from 'vue-lazyload';
+Vue.use(VueLazyLoad, {
+  loading: require('common/image/default.png');
+});
+
+//组件中使用时
+//<img :src="imgUrl"/>
+<img v-lazy= "imgUrl"/>
+```
+* fastclick与butter-scroll冲突时，给要点击的元素添加：`class='needsclick'`;
+
+## 2.9 在Vue获取元素引用
+```JavaScript
+<div class='slider' ref='slider'>
+  <div class="slider-group" ref='dliderGroup'>
+    <slot></slot>
+  </div>
+</div>
+
+methods:{
+  _setSliderWidth(){
+    this.children = this.$refs.sliderGroup.children;
+  }
+}
+```
+
+## 2.10 在Window大小发生改变时，轮播图如何撑满  
+在组件mounted之后给window绑定监听事件：
+```JavaScript
+mounted(){
+  window.addEventListener('resize', ()=>{
+    if(!this.slider){
+      return
+    }
+    //....doSomething
+  })
+}
+```
+
+## 2.11 何时使用Keep-Alive：  
+在“推荐”页面时，轮播图正常运行，当进行tab也得切换时，组件会重新渲染，“推荐”页会重新发请求，此时可用Keep-Alive解决这个问题，在App.vue文件中用keep-alive标签把router-view包裹：
+```JavaScript
+<keep-alive>
+  <router-view></router-view>  
+</keep-alive>
+```
+
+
+# 3. Vue学习总结
+在这次Vue的学习中，主要了解了Vue框架的基本用法，路由配置，在项目练习中，学习到了Vue脚手架vue-cli的用法。由于这次的项目没有使用UI框架，又是一个移动端项目，在做的过程中，老师除了教授Vue的基本知识，一些主要收获是在Vue中如何引用dom元素、何时使用keep-alive、组件的生命周期和组件件间的通讯问题。也讲到了一些用于做动画效果的插件，如better-scroll，还有一些移动端的布局问题，如移动端1px边框问题、flex布局、经典Css Sticky footers布局，以及在Window大小发生改变时，轮播图如何撑满，还有vue本身的用于做过渡动画的transition标签。  
+这次项目练习主要是模仿饿了么外卖做了一下功能和效果，主要是对vue的基础内容做也个简单的实战练习，完成的的主要功能点有：在本地配置node跑一些接口，通过请求的方式拿到数据，而不是直接使用假数据；商品列表、商品详情；商家详情；商品加入和移除购物车；以及商品加入购物车小球飞入动画和better-scroll的使用。
